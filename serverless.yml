@@ -27,6 +27,10 @@ provider:
   # under process.env.
   environment:
     tableName: notes
+    stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+    #The STRIPE_SECRET_KEY from the .env file above gets loaded as an environment variable when we test our code locally.
+    #This allows us to add a Lambda environment variable called stripeSecretKey. We do this using the stripeSecretKey: ${env:STRIPE_SECRET_KEY} line. 
+    #And just like our tableName environment variable, we can reference it in our Lambda function using process.env.stripeSecretKey.
 
   # 'iamRoleStatements' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
@@ -50,10 +54,71 @@ functions:
   #     domain api call
   # - authorizer: authenticate using the AWS IAM role
   create:
+    # - testcli: serverless invoke local --function create --path mocks/create-event.json
     handler: create.main
     events:
       - http:
           path: notes
+          method: post
+          cors: true
+          authorizer: aws_iam
+  get:
+    # Defines an HTTP API endpoint that calls the main function in get.js
+    # - path: url path is /notes/{id}
+    # - method: GET request
+    # - testcli: serverless invoke local --function get --path mocks/get-event.json
+    handler: get.main
+    events:
+      - http:
+          path: notes/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
+  list:
+    # Defines an HTTP API endpoint that calls the main function in list.js
+    # - path: url path is /notes
+    # - method: GET request
+    # - testcli: serverless invoke local --function list --path mocks/list-event.json
+    handler: list.main
+    events:
+      - http:
+          path: notes
+          method: get
+          cors: true
+          authorizer: aws_iam
+  update:
+    # Defines an HTTP API endpoint that calls the main function in update.js
+    # - path: url path is /notes/{id}
+    # - method: PUT request
+    # - testcli: serverless invoke local --function update --path mocks/update-event.json
+    handler: update.main
+    events:
+      - http:
+          path: notes/{id}
+          method: put
+          cors: true
+          authorizer: aws_iam
+  delete:
+    # Defines an HTTP API endpoint that calls the main function in delete.js
+    # - path: url path is /notes/{id}
+    # - method: DELETE request
+    # - testcli: serverless invoke local --function delete --path mocks/delete-event.json
+    handler: delete.main
+    events:
+      - http:
+          path: notes/{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+  billing:
+    # Defines an HTTP API endpoint that calls the main function in billing.js
+    # - path: url path is /billing
+    # - method: POST request
+    # - testcli: serverless invoke local --function billing --path mocks/billing-event.json
+    handler: billing.main
+    events:
+      - http:
+          path: billing
           method: post
           cors: true
           authorizer: aws_iam
