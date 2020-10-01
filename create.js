@@ -16,7 +16,7 @@ export const main = handler(async (event, context) => {
     // - 'createdAt': current Unix timestamp
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      notesId: uuid.v1(),
+      noteId: uuid.v1(),
       content: data.content,
       attachment: data.attachment,
       createdAt: Date.now()

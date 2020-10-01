@@ -10,7 +10,7 @@ export const main = handler(async (event, context) => {
     // - 'noteId': path parameter
     Key: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      notesId: event.pathParameters.id
+      noteId: event.pathParameters.id
     },
     // 'UpdateExpression' defines the attributes to be updated
     // 'ExpressionAttributeValues' defines the value in the update expression
